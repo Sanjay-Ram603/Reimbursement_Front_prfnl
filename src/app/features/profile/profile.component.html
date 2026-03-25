@@ -1,0 +1,114 @@
+<div class="container py-4 px-4">
+
+  <div class="mb-4">
+    <h3 class="fw-bold mb-1">⚙️ My Profile</h3>
+    <p class="text-muted mb-0">View and update your profile information</p>
+  </div>
+
+  <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+  <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+  <div *ngIf="isLoading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status"></div>
+    <p class="mt-2 text-muted">Loading profile...</p>
+  </div>
+
+  <div *ngIf="!isLoading" class="row">
+    <div class="col-lg-6">
+      <div class="card border-0 shadow-sm">
+        <div class="card-body p-4">
+
+          <!-- Avatar -->
+          <div class="text-center mb-4">
+            <div class="avatar-circle mx-auto mb-3">
+              {{ profile.firstName.charAt(0).toUpperCase() }} {{ profile.lastName.charAt(0).toUpperCase() }}
+            </div>
+            <h5 class="fw-bold mb-1">{{ profile.firstName }} {{ profile.lastName }}</h5>
+            <p class="text-muted mb-0">{{ profile.email }}</p>
+          </div>
+
+          <hr/>
+
+          <!-- View Mode -->
+          <div *ngIf="!isEditMode">
+            <div class="mb-3">
+              <label class="form-label text-muted small">First Name</label>
+              <p class="fw-semibold mb-0">{{ profile.firstName }}</p>
+            </div>
+            <div class="mb-3">
+              <label class="form-label text-muted small">Last Name</label>
+              <p class="fw-semibold mb-0">{{ profile.lastName }}</p>
+            </div>
+            <div class="mb-4">
+              <label class="form-label text-muted small">Email Address</label>
+              <p class="fw-semibold mb-0">{{ profile.email }}</p>
+            </div>
+            <button class="btn btn-primary w-100" (click)="toggleEditMode()">
+              ✏️ Edit Profile
+            </button>
+          </div>
+
+          <!-- Edit Mode -->
+          <div *ngIf="isEditMode">
+            <form (ngSubmit)="onUpdate()">
+
+              <div class="mb-3">
+                <label class="form-label fw-semibold">First Name</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  [(ngModel)]="updateData.firstName"
+                  name="firstName"
+                  required
+                />
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label fw-semibold">Last Name</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  [(ngModel)]="updateData.lastName"
+                  name="lastName"
+                  required
+                />
+              </div>
+
+              <div class="mb-4">
+                <label class="form-label fw-semibold">Email Address</label>
+                <input
+                  type="email"
+                  class="form-control"
+                  [(ngModel)]="updateData.email"
+                  name="email"
+                  required
+                />
+              </div>
+
+              <div class="d-flex gap-2">
+                <button
+                  type="submit"
+                  class="btn btn-success flex-grow-1"
+                  [disabled]="isSaving"
+                >
+                  <span *ngIf="isSaving">Saving...</span>
+                  <span *ngIf="!isSaving">💾 Save Changes</span>
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-outline-secondary"
+                  (click)="toggleEditMode()"
+                >
+                  Cancel
+                </button>
+              </div>
+
+            </form>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

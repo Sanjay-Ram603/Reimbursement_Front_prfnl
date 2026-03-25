@@ -1,0 +1,226 @@
+<div class="container-fluid py-4 px-4">
+
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h3 class="fw-bold mb-1">📊 Dashboard</h3>
+      <p class="text-muted mb-0">Welcome back, <strong>{{ userFirstName }}</strong>!</p>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="isLoading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status"></div>
+    <p class="mt-2 text-muted">Loading dashboard...</p>
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+  <!-- ✅ EMPLOYEE DASHBOARD -->
+  <div *ngIf="!isLoading && isEmployee">
+
+    <!-- Summary Cards -->
+    <div class="row g-4 mb-4">
+      <div class="col-xl-3 col-md-6">
+        <div class="card summary-card border-0 shadow-sm h-100">
+          <div class="card-body d-flex align-items-center gap-3">
+            <div class="icon-box bg-primary-subtle text-primary">📋</div>
+            <div>
+              <p class="text-muted mb-1 small">Total Requests</p>
+              <h3 class="fw-bold mb-0">{{ summary.totalRequests }}</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-3 col-md-6">
+        <div class="card summary-card border-0 shadow-sm h-100">
+          <div class="card-body d-flex align-items-center gap-3">
+            <div class="icon-box bg-warning-subtle text-warning">⏳</div>
+            <div>
+              <p class="text-muted mb-1 small">Pending</p>
+              <h3 class="fw-bold mb-0">{{ summary.pendingRequests }}</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-3 col-md-6">
+        <div class="card summary-card border-0 shadow-sm h-100">
+          <div class="card-body d-flex align-items-center gap-3">
+            <div class="icon-box bg-success-subtle text-success">✅</div>
+            <div>
+              <p class="text-muted mb-1 small">Approved</p>
+              <h3 class="fw-bold mb-0">{{ summary.approvedRequests }}</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-3 col-md-6">
+        <div class="card summary-card border-0 shadow-sm h-100">
+          <div class="card-body d-flex align-items-center gap-3">
+            <div class="icon-box bg-danger-subtle text-danger">❌</div>
+            <div>
+              <p class="text-muted mb-1 small">Rejected</p>
+              <h3 class="fw-bold mb-0">{{ summary.rejectedRequests }}</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Total Amount -->
+    <div class="row mb-4">
+      <div class="col-12">
+        <div class="card border-0 shadow-sm">
+          <div class="card-body d-flex align-items-center gap-3">
+            <div class="icon-box bg-info-subtle text-info">💰</div>
+            <div>
+              <p class="text-muted mb-1 small">Total Amount Claimed</p>
+              <h3 class="fw-bold mb-0">₹ {{ summary.totalAmount | number:'1.2-2' }}</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Employee Quick Actions -->
+    <h5 class="fw-semibold mb-3">Quick Actions</h5>
+    <div class="row g-3">
+      <div class="col-md-4">
+        <a [routerLink]="['/reimbursement/create']" class="text-decoration-none">
+          <div class="card border-0 shadow-sm text-center p-4 quick-card">
+            <div class="fs-2 mb-2">📝</div>
+            <p class="fw-semibold mb-0 text-dark">Submit New Request</p>
+            <small class="text-muted">Raise a reimbursement claim</small>
+          </div>
+        </a>
+      </div>
+      <div class="col-md-4">
+        <a [routerLink]="['/reimbursement']" class="text-decoration-none">
+          <div class="card border-0 shadow-sm text-center p-4 quick-card">
+            <div class="fs-2 mb-2">📋</div>
+            <p class="fw-semibold mb-0 text-dark">My Requests</p>
+            <small class="text-muted">View all your submissions</small>
+          </div>
+        </a>
+      </div>
+      <div class="col-md-4">
+        <a [routerLink]="['/profile']" class="text-decoration-none">
+          <div class="card border-0 shadow-sm text-center p-4 quick-card">
+            <div class="fs-2 mb-2">⚙️</div>
+            <p class="fw-semibold mb-0 text-dark">My Profile</p>
+            <small class="text-muted">View and edit your profile</small>
+          </div>
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ✅ ADMIN DASHBOARD -->
+<div *ngIf="!isLoading && isAdmin">
+
+  <!-- Info Banner -->
+  <div class="alert alert-primary border-0 shadow-sm mb-4 d-flex align-items-center gap-3">
+    <div class="fs-3">👋</div>
+    <div>
+      <p class="fw-bold mb-0">Welcome Admin!</p>
+      <p class="mb-0 small">You can review and approve submitted reimbursement requests from employees.</p>
+    </div>
+  </div>
+
+    <!-- Admin Quick Actions -->
+  <h5 class="fw-semibold mb-3">Quick Actions</h5>
+  <div class="row g-3">
+    <div class="col-md-4">
+      <a [routerLink]="['/approval']" class="text-decoration-none">
+        <div class="card border-0 shadow-sm text-center p-4 quick-card">
+          <div class="fs-2 mb-2">✅</div>
+          <p class="fw-semibold mb-0 text-dark">Review Approvals</p>
+          <small class="text-muted">Approve or reject submitted requests</small>
+        </div>
+      </a>
+    </div>
+    <div class="col-md-4">
+      <a [routerLink]="['/reports']" class="text-decoration-none">
+        <div class="card border-0 shadow-sm text-center p-4 quick-card">
+          <div class="fs-2 mb-2">📊</div>
+          <p class="fw-semibold mb-0 text-dark">View Reports</p>
+          <small class="text-muted">Generate reimbursement reports</small>
+        </div>
+      </a>
+    </div>
+    <div class="col-md-4">
+      <a [routerLink]="['/profile']" class="text-decoration-none">
+        <div class="card border-0 shadow-sm text-center p-4 quick-card">
+          <div class="fs-2 mb-2">⚙️</div>
+          <p class="fw-semibold mb-0 text-dark">My Profile</p>
+          <small class="text-muted">View and edit your profile</small>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  </div>
+
+  <!-- ✅ FINANCE DASHBOARD (Same as Admin) -->
+<div *ngIf="!isLoading && isFinance">
+
+  <!-- Info Banner -->
+  <div class="alert alert-warning border-0 shadow-sm mb-4 d-flex align-items-center gap-3">
+    <div class="fs-3">💼</div>
+    <div>
+      <p class="fw-bold mb-0">Welcome Finance Team!</p>
+      <p class="mb-0 small">
+        You can process payments and manage approved reimbursements here.
+      </p>
+    </div>
+  </div>
+
+  <!-- Finance Quick Actions -->
+  <h5 class="fw-semibold mb-3">Finance Actions</h5>
+
+  <div class="row g-3">
+    
+    <div class="col-md-4">
+      <a [routerLink]="['/approval']" class="text-decoration-none">
+        <div class="card border-0 shadow-sm text-center p-4 quick-card">
+          <div class="fs-2 mb-2">✅</div>
+          <p class="fw-semibold mb-0 text-dark">Final Approval</p>
+          <small class="text-muted">
+            Approve manager approved requests
+          </small>
+        </div>
+      </a>
+    </div>
+
+    <div class="col-md-4">
+      <a [routerLink]="['/payment']" class="text-decoration-none">
+        <div class="card border-0 shadow-sm text-center p-4 quick-card">
+          <div class="fs-2 mb-2">💳</div>
+          <p class="fw-semibold mb-0 text-dark">Process Payment</p>
+          <small class="text-muted">
+            Pay approved requests
+          </small>
+        </div>
+      </a>
+    </div>
+
+    <div class="col-md-4">
+      <a [routerLink]="['/reports']" class="text-decoration-none">
+        <div class="card border-0 shadow-sm text-center p-4 quick-card">
+          <div class="fs-2 mb-2">📊</div>
+          <p class="fw-semibold mb-0 text-dark">Finance Reports</p>
+          <small class="text-muted">
+            Track all transactions
+          </small>
+        </div>
+      </a>
+    </div>
+
+  </div>
+
+</div>
+
+
+</div>

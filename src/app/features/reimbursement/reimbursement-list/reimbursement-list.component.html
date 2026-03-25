@@ -1,0 +1,123 @@
+<div class="container-fluid py-4 px-4">
+
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h3 class="fw-bold mb-1">📋 My Reimbursement Requests</h3>
+      <p class="text-muted mb-0">View and manage all your requests</p>
+    </div>
+    <button
+      class="btn btn-primary"
+      [routerLink]="['/reimbursement/create']"
+    >
+      + New Request
+    </button>
+  </div>
+
+  <!-- Alerts -->
+  <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+  <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+  <!-- Loading -->
+  <div *ngIf="isLoading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status"></div>
+    <p class="mt-2 text-muted">Loading requests...</p>
+  </div>
+
+  <div *ngIf="!isLoading">
+
+    <!-- Filter Tabs -->
+    <div class="filter-tabs mb-4">
+      <button
+        *ngFor="let filter of filters"
+        class="filter-btn"
+        [class.active]="activeFilter === filter"
+        (click)="applyFilter(filter)"
+      >
+        {{ filter }}
+        <span class="filter-count">{{ getFilterCount(filter) }}</span>
+      </button>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="filteredRequests.length === 0" class="text-center py-5">
+      <div class="fs-1 mb-3">📭</div>
+      <h5 class="text-muted">No {{ activeFilter === 'All' ? '' : activeFilter }} requests found</h5>
+      <p class="text-muted">
+        {{ activeFilter === 'All' ? "You haven't submitted any requests yet." : 'No requests match this filter.' }}
+      </p>
+      <button
+        *ngIf="activeFilter === 'All'"
+        class="btn btn-primary mt-2"
+        [routerLink]="['/reimbursement/create']"
+      >
+        Submit Your First Request
+      </button>
+    </div>
+
+    <!-- Requests Table -->
+    <div *ngIf="filteredRequests.length > 0" class="card border-0 shadow-sm">
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-hover mb-0">
+            <thead class="table-light">
+              <tr>
+                <th class="px-4 py-3">#</th>
+                <th class="px-4 py-3">Description</th>
+                <th class="px-4 py-3">Amount</th>
+                <th class="px-4 py-3">Status</th>
+                <th class="px-4 py-3">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let req of filteredRequests; let i = index">
+                <td class="px-4 py-3">{{ i + 1 }}</td>
+                <td class="px-4 py-3">{{ req.description }}</td>
+                <td class="px-4 py-3">₹ {{ req.amount | number:'1.2-2' }}</td>
+                <td class="px-4 py-3">
+                  <span class="badge {{ getStatusClass(req.status) }} px-3 py-2">
+                    {{ getStatusLabel(req.status) }}
+                  </span>
+                </td>
+                <td class="px-4 py-3">
+                  <div class="d-flex gap-2 flex-wrap">
+
+                    <!-- Download -->
+                    <button
+                      class="btn btn-sm btn-outline-primary"
+                      (click)="downloadAttachment(req.reimbursementRequestId)"
+                      *ngIf="req.attachmentPath"
+                    >
+                      📎 Download
+                    </button>
+
+                    <!-- Edit - only Submitted -->
+                    <button
+                      class="btn btn-sm btn-outline-warning"
+                      [routerLink]="['/reimbursement/edit', req.reimbursementRequestId]"
+                      *ngIf="req.status === ReimbursementStatus.Submitted"
+                    >
+                      ✏️ Edit
+                    </button>
+
+                    <!-- Delete - only Submitted -->
+                    <button
+                      class="btn btn-sm btn-outline-danger"
+                      (click)="deleteRequest(req.reimbursementRequestId)"
+                      *ngIf="req.status === ReimbursementStatus.Submitted"
+                    >
+                      🗑️ Delete
+                    </button>
+
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>

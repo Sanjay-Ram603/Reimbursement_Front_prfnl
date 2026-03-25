@@ -1,0 +1,24 @@
+
+
+.card {
+  border-radius: 16px;
+  border: none;
+}
+
+.btn-primary {
+  border-radius: 8px;
+  padding: 10px;
+  font-weight: 600;
+}
+
+.form-control,
+.form-select {
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
+}
