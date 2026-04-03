@@ -1,0 +1,148 @@
+<div class="container-fluid py-4 px-4">
+
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h3 class="fw-bold mb-1">📋 My Claims</h3>
+      <p class="text-muted mb-0">Your personal reimbursement claims</p>
+    </div>
+    <button class="btn btn-primary" [routerLink]="['/my-claims/create']">
+      + New Claim
+    </button>
+  </div>
+
+  <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+  <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+  <div *ngIf="isLoading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status"></div>
+    <p class="mt-2 text-muted">Loading claims...</p>
+  </div>
+
+  <div *ngIf="!isLoading && claims.length === 0" class="text-center py-5">
+    <div class="fs-1 mb-3">📭</div>
+    <h5 class="text-muted">No claims found</h5>
+    <p class="text-muted">You haven't submitted any claims yet.</p>
+    <button class="btn btn-primary mt-2" [routerLink]="['/my-claims/create']">
+      Submit Your First Claim
+    </button>
+  </div>
+
+  <div *ngIf="!isLoading && claims.length > 0" class="card border-0 shadow-sm">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead class="table-light">
+            <tr>
+              <th class="px-4 py-3">#</th>
+              <th class="px-4 py-3">Description</th>
+              <th class="px-4 py-3">Amount</th>
+              <th class="px-4 py-3">Status</th>
+              <th class="px-4 py-3">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngFor="let claim of claims; let i = index">
+
+              <!-- Main Row -->
+              <tr>
+                <td class="px-4 py-3">{{ i + 1 }}</td>
+                <td class="px-4 py-3">{{ claim.description }}</td>
+                <td class="px-4 py-3">₹ {{ claim.amount | number:'1.2-2' }}</td>
+                <td class="px-4 py-3">
+                  <span class="badge {{ getStatusClass(claim.status) }} px-3 py-2">
+                    {{ getStatusLabel(claim.status) }}
+                  </span>
+                </td>
+                <td class="px-4 py-3">
+                  <div class="d-flex gap-2 flex-wrap">
+
+                    <!-- Download -->
+                    <button
+                      class="btn btn-sm btn-outline-primary"
+                      (click)="downloadAttachment(claim.reimbursementRequestId)"
+                      *ngIf="claim.attachmentPath"
+                    >
+                      📎 Download
+                    </button>
+
+                    <!-- ✅ View Comments - only after approval action -->
+                    <button
+                      class="btn btn-sm btn-outline-info"
+                      (click)="toggleHistory(claim.reimbursementRequestId)"
+                      *ngIf="claim.status !== ReimbursementStatus.Submitted &&
+                             claim.status !== ReimbursementStatus.Draft"
+                    >
+                      💬 {{ showHistoryId === claim.reimbursementRequestId ? 'Hide' : 'Comments' }}
+                    </button>
+
+                    <!-- ✅ Edit - only Submitted -->
+                    <button
+                      class="btn btn-sm btn-outline-warning"
+                      [routerLink]="['/my-claims/edit', claim.reimbursementRequestId]"
+                      *ngIf="claim.status === ReimbursementStatus.Submitted"
+                    >
+                      ✏️ Edit
+                    </button>
+
+                    <!-- ✅ Delete - only Submitted -->
+                    <button
+                      class="btn btn-sm btn-outline-danger"
+                      (click)="deleteClaim(claim.reimbursementRequestId)"
+                      *ngIf="claim.status === ReimbursementStatus.Submitted"
+                    >
+                      🗑️ Delete
+                    </button>
+
+                  </div>
+                </td>
+              </tr>
+
+              <!-- ✅ Comments History Row -->
+              <tr *ngIf="showHistoryId === claim.reimbursementRequestId">
+                <td colspan="5" class="px-4 py-3 bg-light">
+                  <div class="p-2">
+                    <h6 class="fw-bold mb-3">💬 Approval History & Comments</h6>
+
+                    <div *ngIf="!historyMap[claim.reimbursementRequestId]" class="text-muted">
+                      <div class="spinner-border spinner-border-sm text-primary me-2"></div>
+                      Loading comments...
+                    </div>
+
+                    <div *ngIf="historyMap[claim.reimbursementRequestId]?.length === 0"
+                      class="text-muted small">
+                      No comments yet.
+                    </div>
+
+                    <div
+                      *ngFor="let h of historyMap[claim.reimbursementRequestId]"
+                      class="comment-card mb-2 p-3 bg-white rounded shadow-sm"
+                    >
+                      <div class="d-flex justify-content-between align-items-center mb-1">
+                        <span class="fw-semibold">👤 {{ h.approverName }}</span>
+                        <small class="text-muted">{{ h.actionDate | date:'medium' }}</small>
+                      </div>
+                      <div class="mb-1">
+                        <span class="badge {{ getStatusClass(h.status) }} px-2 py-1">
+                          {{ getStatusLabel(h.status) }}
+                        </span>
+                      </div>
+                      <p class="mb-0 text-muted small" *ngIf="h.comments">
+                        💬 {{ h.comments }}
+                      </p>
+                      <p class="mb-0 text-muted small fst-italic" *ngIf="!h.comments">
+                        No comment provided
+                      </p>
+                    </div>
+
+                  </div>
+                </td>
+              </tr>
+
+            </ng-container>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>

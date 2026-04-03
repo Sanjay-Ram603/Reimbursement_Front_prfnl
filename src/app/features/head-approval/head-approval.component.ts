@@ -3,18 +3,17 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ApprovalService } from '../../core/services/approval.service';
 import { ReimbursementService } from '../../core/services/reimbursement.service';
-import { AuthService } from '../../core/services/auth.service';
-import { ApprovalActionRequest, ApprovalHistoryResponse } from '../../core/models/approval.model';
+import { ApprovalActionRequest } from '../../core/models/approval.model';
 import { ReimbursementRequestResponse, ReimbursementStatus } from '../../core/models/reimbursement.model';
 
 @Component({
-  selector: 'app-approval',
+  selector: 'app-head-approval',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './approval.component.html',
-  styleUrl: './approval.component.css'
+  templateUrl: './head-approval.component.html',
+  styleUrl: './head-approval.component.css'
 })
-export class ApprovalComponent implements OnInit {
+export class HeadApprovalComponent implements OnInit {
   allRequests: ReimbursementRequestResponse[] = [];
   filteredRequests: ReimbursementRequestResponse[] = [];
   isLoading: boolean = false;
@@ -23,42 +22,25 @@ export class ApprovalComponent implements OnInit {
   selectedRequestId: string = '';
   comments: string = '';
   ReimbursementStatus = ReimbursementStatus;
-
-  isAdmin: boolean = false;
-  isFinance: boolean = false;
-
   dateFilter: string = 'recent';
   amountFilter: string = 'all';
 
-  // ✅ History tracking
-  historyMap: { [key: string]: ApprovalHistoryResponse[] } = {};
-  showHistoryId: string = '';
-
   constructor(
     private approvalService: ApprovalService,
-    private reimbursementService: ReimbursementService,
-    private authService: AuthService
+    private reimbursementService: ReimbursementService
   ) {}
 
   ngOnInit(): void {
-    this.isAdmin = this.authService.isAdmin();
-    this.isFinance = this.authService.isFinance();
     this.loadRequests();
   }
 
   loadRequests(): void {
     this.isLoading = true;
-    this.reimbursementService.getAllRequests().subscribe({
+    this.reimbursementService.getHeadRequests().subscribe({
       next: (data) => {
-        if (this.isAdmin) {
-          this.allRequests = data.filter(
-            r => r.status === ReimbursementStatus.Submitted
-          );
-        } else if (this.isFinance) {
-          this.allRequests = data.filter(
-            r => r.status === ReimbursementStatus.ManagerApproved
-          );
-        }
+        this.allRequests = data.filter(
+          r => r.status === ReimbursementStatus.Submitted
+        );
         this.applyFilters();
         this.isLoading = false;
       },
@@ -71,35 +53,22 @@ export class ApprovalComponent implements OnInit {
 
   applyFilters(): void {
     let result = [...this.allRequests];
-
     switch (this.amountFilter) {
-      case 'below10k':
-        result = result.filter(r => r.amount < 10000);
-        break;
-      case '10kTo50k':
-        result = result.filter(r => r.amount >= 10000 && r.amount <= 50000);
-        break;
-      case 'above50k':
-        result = result.filter(r => r.amount > 50000);
-        break;
+      case 'below10k': result = result.filter(r => r.amount < 10000); break;
+      case '10kTo50k': result = result.filter(r => r.amount >= 10000 && r.amount <= 50000); break;
+      case 'above50k': result = result.filter(r => r.amount > 50000); break;
     }
-
     if (this.dateFilter === 'recent') {
       result = [...result].sort((a, b) =>
-        new Date(b.createdAt!).getTime() - new Date(a.createdAt!).getTime()
-      );
-    } else if (this.dateFilter === 'oldest') {
+        new Date(b.createdAt!).getTime() - new Date(a.createdAt!).getTime());
+    } else {
       result = [...result].sort((a, b) =>
-        new Date(a.createdAt!).getTime() - new Date(b.createdAt!).getTime()
-      );
+        new Date(a.createdAt!).getTime() - new Date(b.createdAt!).getTime());
     }
-
     this.filteredRequests = result;
   }
 
-  onFilterChange(): void {
-    this.applyFilters();
-  }
+  onFilterChange(): void { this.applyFilters(); }
 
   processApproval(requestId: string, status: ReimbursementStatus): void {
     const request: ApprovalActionRequest = {
@@ -107,7 +76,6 @@ export class ApprovalComponent implements OnInit {
       status: status,
       comments: this.comments
     };
-
     this.approvalService.processApproval(request).subscribe({
       next: () => {
         this.successMessage = 'Action processed successfully!';
@@ -116,16 +84,8 @@ export class ApprovalComponent implements OnInit {
         this.loadRequests();
         setTimeout(() => this.successMessage = '', 3000);
       },
-      error: (err) => {
-        this.errorMessage = err.message;
-      }
+      error: (err) => { this.errorMessage = err.message; }
     });
-  }
-
-  toggleComments(requestId: string): void {
-    this.selectedRequestId =
-      this.selectedRequestId === requestId ? '' : requestId;
-    this.comments = '';
   }
 
   downloadAttachment(requestId: string): void {
@@ -133,15 +93,16 @@ export class ApprovalComponent implements OnInit {
       next: (blob) => {
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
-        a.href = url;
-        a.download = 'attachment';
-        a.click();
+        a.href = url; a.download = 'attachment'; a.click();
         window.URL.revokeObjectURL(url);
       },
-      error: () => {
-        alert('No attachment found!');
-      }
+      error: () => { alert('No attachment found!'); }
     });
+  }
+
+  toggleComments(requestId: string): void {
+    this.selectedRequestId = this.selectedRequestId === requestId ? '' : requestId;
+    this.comments = '';
   }
 
   getStatusLabel(status: ReimbursementStatus): string {

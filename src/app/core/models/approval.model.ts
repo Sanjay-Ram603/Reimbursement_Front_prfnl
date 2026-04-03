@@ -1,5 +1,3 @@
-
-
 import { ReimbursementStatus } from './reimbursement.model';
 
 export enum ApprovalStage {
@@ -11,6 +9,14 @@ export interface ApprovalActionRequest {
   reimbursementRequestId: string;
   status: ReimbursementStatus;
   comments?: string;
+}
+
+export interface ApprovalHistoryResponse {
+  reimbursementRequestId: string;
+  approverName: string;
+  comments?: string;
+  status: number;
+  actionDate: Date;
 }
 
 export interface PendingApproval {

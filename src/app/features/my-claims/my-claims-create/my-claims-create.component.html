@@ -1,0 +1,82 @@
+<div class="container py-4 px-4">
+
+  <div class="d-flex align-items-center mb-4 gap-3">
+    <button class="btn btn-outline-secondary btn-sm" [routerLink]="['/my-claims']">← Back</button>
+    <div>
+      <h3 class="fw-bold mb-1">📝 Submit New Claim</h3>
+      <p class="text-muted mb-0">Submit your personal reimbursement claim</p>
+    </div>
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+  <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+
+  <div class="card border-0 shadow-sm">
+    <div class="card-body p-4">
+      <form (ngSubmit)="onSubmit()">
+
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Expense Category <span class="text-danger">*</span></label>
+          <select class="form-select" [(ngModel)]="expenseCategoryId" name="expenseCategoryId" required>
+            <option value="">Select a category</option>
+            <option *ngFor="let cat of categories" [value]="cat.expenseCategoryId">
+              {{ cat.categoryName }}
+            </option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Amount (₹) <span class="text-danger">*</span></label>
+          <input type="number" class="form-control" placeholder="Enter amount"
+            [(ngModel)]="amount" name="amount" min="1" required />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Description <span class="text-danger">*</span></label>
+          <textarea class="form-control" placeholder="Describe the expense..."
+            [(ngModel)]="description" name="description" rows="3" required></textarea>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Expense Date <span class="text-danger">*</span></label>
+          <input type="date" class="form-control" [(ngModel)]="expenseDate" name="expenseDate" required />
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label fw-semibold">Attachment <span class="text-danger">*</span></label>
+          <p class="text-muted small mb-2">Upload receipt (JPG, PNG, PDF — max 5MB)</p>
+          <div class="upload-box" [class.has-file]="selectedFile" (click)="fileInput.click()">
+            <input #fileInput type="file" class="d-none" accept=".jpg,.jpeg,.png,.pdf"
+              (change)="onFileSelected($event)" />
+            <div *ngIf="!selectedFile" class="text-center">
+              <div class="fs-2 mb-2">📎</div>
+              <p class="mb-1 fw-semibold text-primary">Click to upload</p>
+              <p class="text-muted small mb-0">JPG, PNG or PDF</p>
+            </div>
+            <div *ngIf="selectedFile" class="d-flex align-items-center gap-3 px-2">
+              <div class="file-icon">📄</div>
+              <div class="flex-grow-1">
+                <p class="fw-semibold mb-0">{{ selectedFileName }}</p>
+                <p class="text-muted small mb-0">{{ (selectedFile.size / 1024).toFixed(1) }} KB</p>
+              </div>
+              <button type="button" class="btn btn-sm btn-outline-danger"
+                (click)="removeFile(); $event.stopPropagation()">✕ Remove</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="d-flex gap-2">
+          <button type="submit" class="btn btn-primary px-4" [disabled]="isLoading">
+            <span *ngIf="isLoading">Submitting...</span>
+            <span *ngIf="!isLoading">🚀 Submit Claim</span>
+          </button>
+          <button type="button" class="btn btn-outline-secondary px-4" [routerLink]="['/my-claims']">
+            Cancel
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+</div>

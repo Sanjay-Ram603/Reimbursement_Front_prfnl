@@ -23,6 +23,7 @@ export interface CreateReimbursementRequest {
   attachmentPath?: string;
 }
 
+
 export interface ReimbursementRequestResponse {
   reimbursementRequestId: string;
   amount: number;
@@ -30,6 +31,9 @@ export interface ReimbursementRequestResponse {
   status: ReimbursementStatus;
   attachmentPath?: string;
   createdAt?: string;
+  employeeName?: string;
+  employeeEmail?: string;
+  employeeRole?: string;
 }
 
 export interface UpdateReimbursementRequest {

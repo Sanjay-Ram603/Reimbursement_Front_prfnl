@@ -75,7 +75,7 @@
           <div class="card-body d-flex align-items-center gap-3">
             <div class="icon-box bg-info-subtle text-info">💰</div>
             <div>
-              <p class="text-muted mb-1 small">Total Amount Claimed</p>
+              <p class="text-muted mb-1 small">Total Amount Submitted</p>
               <h3 class="fw-bold mb-0">₹ {{ summary.totalAmount | number:'1.2-2' }}</h3>
             </div>
           </div>
@@ -124,7 +124,7 @@
   <div class="alert alert-primary border-0 shadow-sm mb-4 d-flex align-items-center gap-3">
     <div class="fs-3">👋</div>
     <div>
-      <p class="fw-bold mb-0">Welcome Admin!</p>
+      <p class="fw-bold mb-0">Welcome Manager!</p>
       <p class="mb-0 small">You can review and approve submitted reimbursement requests from employees.</p>
     </div>
   </div>
@@ -218,6 +218,50 @@
       </a>
     </div>
 
+  </div>
+
+</div>
+
+<!-- ✅ HEAD DASHBOARD -->
+<div *ngIf="!isLoading && isHead">
+
+  <div class="alert alert-primary border-0 shadow-sm mb-4 d-flex align-items-center gap-3">
+    <div class="fs-3">👑</div>
+    <div>
+      <p class="fw-bold mb-0">Welcome Head!</p>
+      <p class="mb-0 small">You oversee and approve reimbursement claims from Managers and Finance team.</p>
+    </div>
+  </div>
+
+  <h5 class="fw-semibold mb-3">Quick Actions</h5>
+  <div class="row g-3">
+    <div class="col-md-4">
+      <a [routerLink]="['/head-approval']" class="text-decoration-none">
+        <div class="card border-0 shadow-sm text-center p-4 quick-card">
+          <div class="fs-2 mb-2">✅</div>
+          <p class="fw-semibold mb-0 text-dark">Review Approvals</p>
+          <small class="text-muted">Approve Manager & Finance claims</small>
+        </div>
+      </a>
+    </div>
+    <div class="col-md-4">
+      <a [routerLink]="['/head-payment']" class="text-decoration-none">
+        <div class="card border-0 shadow-sm text-center p-4 quick-card">
+          <div class="fs-2 mb-2">💳</div>
+          <p class="fw-semibold mb-0 text-dark">Process Payment</p>
+          <small class="text-muted">Pay approved claims</small>
+        </div>
+      </a>
+    </div>
+    <div class="col-md-4">
+      <a [routerLink]="['/head-reports']" class="text-decoration-none">
+        <div class="card border-0 shadow-sm text-center p-4 quick-card">
+          <div class="fs-2 mb-2">📊</div>
+          <p class="fw-semibold mb-0 text-dark">View Reports</p>
+          <small class="text-muted">Generate claim reports</small>
+        </div>
+      </a>
+    </div>
   </div>
 
 </div>

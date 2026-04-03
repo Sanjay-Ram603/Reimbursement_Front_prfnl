@@ -39,49 +39,54 @@ export class PaymentComponent implements OnInit {
   }
 
   loadRequests(): void {
-    this.isLoading = true;
-    this.reimbursementService.getMyRequests().subscribe({
-      next: (data) => {
-        this.requests = data.filter(
-          r => r.status === ReimbursementStatus.FinanceApproved
-        );
-        this.isLoading = false;
-      },
-      error: (err) => {
-        this.errorMessage = err.message;
-        this.isLoading = false;
-      }
-    });
-  }
+  this.isLoading = true;
+  this.reimbursementService.getAllRequests().subscribe({
+    next: (data) => {
+      this.requests = data.filter(
+        r => r.status === ReimbursementStatus.FinanceApproved
+      );
+      this.isLoading = false;
+    },
+    error: (err) => {
+      this.errorMessage = err.message;
+      this.isLoading = false;
+    }
+  });
+}
 
   selectRequest(req: ReimbursementRequestResponse): void {
-    this.selectedRequestId = req.reimbursementRequestId;
-    this.selectedPayment = {
-      reimbursementRequestId: req.reimbursementRequestId,
-      amount: req.amount,
-      paymentMethod: PaymentMethod.BankTransfer
-    };
-  }
+  this.selectedRequestId = req.reimbursementRequestId;
+  this.selectedPayment = {
+    reimbursementRequestId: req.reimbursementRequestId,
+    amount: req.amount,
+    paymentMethod: 1  // ✅ 
+  };
+}
 
   processPayment(): void {
-    this.errorMessage = '';
-    this.successMessage = '';
-    this.isLoading = true;
+  this.isLoading = true;
 
-    this.paymentService.processPayment(this.selectedPayment).subscribe({
-      next: () => {
-        this.successMessage = 'Payment processed successfully!';
-        this.selectedRequestId = '';
-        this.isLoading = false;
-        this.loadRequests();
-        setTimeout(() => this.successMessage = '', 3000);
-      },
-      error: (err) => {
-        this.errorMessage = err.message;
-        this.isLoading = false;
-      }
-    });
-  }
+  // ✅ Ensure paymentMethod is sent as number not string
+  const payload = {
+    reimbursementRequestId: this.selectedPayment.reimbursementRequestId,
+    amount: this.selectedPayment.amount,
+    paymentMethod: Number(this.selectedPayment.paymentMethod)
+  };
+
+  this.paymentService.processPayment(payload).subscribe({
+    next: () => {
+      this.successMessage = 'Payment processed successfully!';
+      this.selectedRequestId = '';
+      this.isLoading = false;
+      this.loadRequests();
+      setTimeout(() => this.successMessage = '', 3000);
+    },
+    error: (err) => {
+      this.errorMessage = err.message;
+      this.isLoading = false;
+    }
+  });
+}
 
   cancelSelection(): void {
     this.selectedRequestId = '';

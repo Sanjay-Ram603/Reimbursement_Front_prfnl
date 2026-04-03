@@ -1,0 +1,6 @@
+.card { border-radius: 12px; }
+.card-header { border-radius: 12px 12px 0 0 !important; border-bottom: 1px solid #f0f0f0; }
+.table th { font-weight: 600; font-size: 0.875rem; text-transform: uppercase; color: #6c757d; }
+.table td { vertical-align: middle; }
+.form-control, .form-select { border-radius: 8px; padding: 10px; }
+.btn { border-radius: 8px; }

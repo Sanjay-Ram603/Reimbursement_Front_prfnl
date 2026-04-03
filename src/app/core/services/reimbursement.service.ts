@@ -58,6 +58,10 @@ export class ReimbursementService {
     return this.http.delete(`${this.apiUrl}/${id}`);
   }
 
+  getHeadRequests(): Observable<ReimbursementRequestResponse[]> {
+  return this.http.get<ReimbursementRequestResponse[]>(`${this.apiUrl}/head`);
+}
+
   // ✅ DOWNLOAD ATTACHMENT
   downloadAttachment(id: string): Observable<Blob> {
     return this.http.get(`${this.apiUrl}/download/${id}`, {

@@ -1,5 +1,5 @@
 <div class="min-vh-100 d-flex align-items-center justify-content-center bg-light">
-  <div class="card shadow-lg p-4" style="width: 100%; max-width: 480px;">
+  <div class="card shadow-lg p-4" style="width: 100%; max-width: 500px;">
 
     <div class="text-center mb-4">
       <h2 class="fw-bold text-primary">💼 ReimbursementTracker</h2>
@@ -11,70 +11,156 @@
 
     <form (ngSubmit)="onRegister()">
 
+      <!-- First Name & Last Name -->
       <div class="row">
         <div class="col-md-6 mb-3">
-          <label class="form-label fw-semibold">First Name</label>
+          <label class="form-label fw-semibold">
+            First Name <span class="text-danger">*</span>
+          </label>
           <input
             type="text"
             class="form-control"
+            [class.is-invalid]="errors.firstName"
+            [class.is-valid]="!errors.firstName && registerData.firstName"
             placeholder="First name"
             [(ngModel)]="registerData.firstName"
             name="firstName"
-            required
+            (blur)="validateFirstName()"
+            (input)="validateFirstName()"
           />
+          <div class="invalid-feedback" *ngIf="errors.firstName">
+            {{ errors.firstName }}
+          </div>
+          <div class="valid-feedback">Looks good!</div>
         </div>
+
         <div class="col-md-6 mb-3">
-          <label class="form-label fw-semibold">Last Name</label>
+          <label class="form-label fw-semibold">
+            Last Name <span class="text-danger">*</span>
+          </label>
           <input
             type="text"
             class="form-control"
+            [class.is-invalid]="errors.lastName"
+            [class.is-valid]="!errors.lastName && registerData.lastName"
             placeholder="Last name"
             [(ngModel)]="registerData.lastName"
             name="lastName"
-            required
+            (blur)="validateLastName()"
+            (input)="validateLastName()"
           />
+          <div class="invalid-feedback" *ngIf="errors.lastName">
+            {{ errors.lastName }}
+          </div>
+          <div class="valid-feedback">Looks good!</div>
         </div>
       </div>
 
+      <!-- Email -->
       <div class="mb-3">
-        <label class="form-label fw-semibold">Email Address</label>
+        <label class="form-label fw-semibold">
+          Email Address <span class="text-danger">*</span>
+        </label>
         <input
           type="email"
           class="form-control"
-          placeholder="Enter your email"
+          [class.is-invalid]="errors.email"
+          [class.is-valid]="!errors.email && registerData.email"
+          placeholder="example@gmail.com"
           [(ngModel)]="registerData.email"
           name="email"
-          required
+          (blur)="validateEmail()"
+          (input)="validateEmail()"
         />
+        <div class="invalid-feedback" *ngIf="errors.email">
+          {{ errors.email }}
+        </div>
+        <div class="valid-feedback">Valid email!</div>
       </div>
 
+      <!-- Password -->
       <div class="mb-3">
-        <label class="form-label fw-semibold">Password</label>
+        <label class="form-label fw-semibold">
+          Password <span class="text-danger">*</span>
+        </label>
         <input
           type="password"
           class="form-control"
-          placeholder="Enter your password"
+          [class.is-invalid]="errors.password"
+          [class.is-valid]="!errors.password && registerData.password"
+          placeholder="Min 8 chars, 1 uppercase, 1 number"
           [(ngModel)]="registerData.password"
           name="password"
-          required
+          (blur)="validatePassword()"
+          (input)="validatePassword()"
         />
+        <div class="invalid-feedback" *ngIf="errors.password">
+          {{ errors.password }}
+        </div>
+        <div class="valid-feedback">Strong password!</div>
+
+        <!-- Password Strength Indicator -->
+        <div class="mt-2" *ngIf="registerData.password">
+          <small class="text-muted">Password strength:</small>
+          <div class="password-strength mt-1">
+            <div
+              class="strength-bar"
+              [style.width]="getPasswordStrength() + '%'"
+              [class.weak]="getPasswordStrength() <= 33"
+              [class.medium]="getPasswordStrength() > 33 && getPasswordStrength() <= 66"
+              [class.strong]="getPasswordStrength() > 66"
+            ></div>
+          </div>
+          <small
+            [class.text-danger]="getPasswordStrength() <= 33"
+            [class.text-warning]="getPasswordStrength() > 33 && getPasswordStrength() <= 66"
+            [class.text-success]="getPasswordStrength() > 66"
+          >
+            {{ getPasswordLabel() }}
+          </small>
+        </div>
+
+        <!-- Password Rules -->
+        <div class="mt-2" *ngIf="registerData.password">
+          <small [class.text-success]="registerData.password.length >= 8"
+                 [class.text-danger]="registerData.password.length < 8">
+            {{ registerData.password.length >= 8 ? '✅' : '❌' }} At least 8 characters
+          </small><br/>
+          <small [class.text-success]="/[A-Z]/.test(registerData.password)"
+                 [class.text-danger]="!/[A-Z]/.test(registerData.password)">
+            {{ /[A-Z]/.test(registerData.password) ? '✅' : '❌' }} One uppercase letter
+          </small><br/>
+          <small [class.text-success]="/[0-9]/.test(registerData.password)"
+                 [class.text-danger]="!/[0-9]/.test(registerData.password)">
+            {{ /[0-9]/.test(registerData.password) ? '✅' : '❌' }} One number
+          </small>
+        </div>
       </div>
 
+      <!-- Role -->
       <div class="mb-4">
-        <label class="form-label fw-semibold">Role</label>
+        <label class="form-label fw-semibold">
+          Role <span class="text-danger">*</span>
+        </label>
         <select
           class="form-select"
+          [class.is-invalid]="errors.roleId"
+          [class.is-valid]="!errors.roleId && registerData.roleId"
           [(ngModel)]="registerData.roleId"
           name="roleId"
-          required
+          (change)="validateRole()"
         >
           <option value="">Select your role</option>
           <option *ngFor="let role of roles" [value]="role.id">
             {{ role.name }}
           </option>
         </select>
+        <div class="invalid-feedback" *ngIf="errors.roleId">
+          {{ errors.roleId }}
+        </div>
       </div>
 
+      <!-- Submit Button -->
       <button
         type="submit"
         class="btn btn-primary w-100 mt-2"

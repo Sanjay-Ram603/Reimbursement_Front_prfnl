@@ -33,13 +33,16 @@ export class DashboardComponent implements OnInit {
     private authService: AuthService
   ) {}
 
-  ngOnInit(): void {
-    this.isAdmin = this.authService.isAdmin();
-    this.isEmployee = this.authService.isEmployee();
-    this.isFinance = this.authService.isFinance();
-    this.userFirstName = this.authService.getEmail()?.split('@')[0] || '';
-    this.loadDashboard();
-  }
+  isHead: boolean = false;
+
+ngOnInit(): void {
+  this.isAdmin = this.authService.isAdmin();
+  this.isEmployee = this.authService.isEmployee();
+  this.isFinance = this.authService.isFinance();
+  this.isHead = this.authService.isHead();
+  this.userFirstName = this.authService.getEmail()?.split('@')[0] || '';
+  this.loadDashboard();
+}
 
   loadDashboard(): void {
   this.isLoading = true;
@@ -62,6 +65,8 @@ export class DashboardComponent implements OnInit {
     }
   });
 }
+
+
 
 
   financeStats = {

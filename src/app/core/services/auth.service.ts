@@ -59,7 +59,7 @@ export class AuthService {
   }
 
   isAdmin(): boolean {
-    return this.getRoleFromToken() === 'Admin';
+    return this.getRoleFromToken() === 'Manager';
   }
 
   isEmployee(): boolean {
@@ -69,6 +69,10 @@ export class AuthService {
   isFinance(): boolean {
     return this.getRoleFromToken() === 'Finance';
   }
+
+  isHead(): boolean {
+  return this.getRoleFromToken() === 'Head';
+}
 
   logout(): void {
     localStorage.clear();

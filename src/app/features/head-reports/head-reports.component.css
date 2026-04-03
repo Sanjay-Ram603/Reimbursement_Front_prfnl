@@ -1,0 +1,10 @@
+.card { border-radius: 12px; }
+.form-control, .form-select { border-radius: 8px; padding: 10px; }
+.table th { font-weight: 600; font-size: 0.875rem; text-transform: uppercase; color: #6c757d; }
+.table td { vertical-align: middle; }
+.btn { border-radius: 8px; }
+
+.bg-brown {
+  background-color: #6f4e37; /* nice coffee brown */
+  color: #fff;
+}

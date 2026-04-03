@@ -16,14 +16,12 @@ export class ReportService {
     fromDate: string,
     toDate: string,
     status: string | null = null,
+    role: string | null = null,
     startIndex: number = 0,
     pageSize: number = 5
   ): Observable<ReimbursementReport[]> {
-
-    // ✅ Convert date to proper ISO format for .NET backend
     const from = new Date(fromDate);
     from.setHours(0, 0, 0, 0);
-
     const to = new Date(toDate);
     to.setHours(23, 59, 59, 999);
 
@@ -36,7 +34,35 @@ export class ReportService {
     if (status && status !== 'all') {
       params = params.set('status', status);
     }
+    if (role) {
+      params = params.set('role', role);
+    }
 
     return this.http.get<ReimbursementReport[]>(this.apiUrl, { params });
+  }
+
+  getTotalCount(
+    fromDate: string,
+    toDate: string,
+    status: string | null = null,
+    role: string | null = null
+  ): Observable<number> {
+    const from = new Date(fromDate);
+    from.setHours(0, 0, 0, 0);
+    const to = new Date(toDate);
+    to.setHours(23, 59, 59, 999);
+
+    let params = new HttpParams()
+      .set('fromDate', from.toISOString())
+      .set('toDate', to.toISOString());
+
+    if (status && status !== 'all') {
+      params = params.set('status', status);
+    }
+    if (role) {
+      params = params.set('role', role);
+    }
+
+    return this.http.get<number>(`${this.apiUrl}/count`, { params });
   }
 }

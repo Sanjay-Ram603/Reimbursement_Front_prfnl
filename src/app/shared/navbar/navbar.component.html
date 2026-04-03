@@ -5,57 +5,80 @@
       💼 ReimbursementTracker
     </a>
 
-    <button
-      class="navbar-toggler"
-      type="button"
-      data-bs-toggle="collapse"
-      data-bs-target="#navbarNav"
-    >
+    <button class="navbar-toggler" type="button"
+      data-bs-toggle="collapse" data-bs-target="#navbarNav">
       <span class="navbar-toggler-icon"></span>
     </button>
 
     <div class="collapse navbar-collapse" id="navbarNav">
-
       <ul class="navbar-nav me-auto">
 
+        <!-- All Roles -->
         <li class="nav-item">
           <span class="nav-link" [routerLink]="['/dashboard']" routerLinkActive="active">
             🏠 Dashboard
           </span>
         </li>
 
+        <!-- Employee Only -->
         <li class="nav-item" *ngIf="isEmployee">
           <span class="nav-link" [routerLink]="['/reimbursement']" routerLinkActive="active">
             📋 My Requests
           </span>
         </li>
 
+        <!-- Manager Only -->
         <li class="nav-item" *ngIf="isAdmin">
           <span class="nav-link" [routerLink]="['/approval']" routerLinkActive="active">
             ✅ Approvals
           </span>
         </li>
-
+        <li class="nav-item" *ngIf="isAdmin">
+          <span class="nav-link" [routerLink]="['/my-claims']" routerLinkActive="active">
+            📋 My Claims
+          </span>
+        </li>
         <li class="nav-item" *ngIf="isAdmin">
           <span class="nav-link" [routerLink]="['/reports']" routerLinkActive="active">
             📊 Reports
           </span>
         </li>
 
+        <!-- Finance Only -->
         <li class="nav-item" *ngIf="isFinance">
           <span class="nav-link" [routerLink]="['/approval']" routerLinkActive="active">
             ✅ Final Approval
           </span>
         </li>
-
         <li class="nav-item" *ngIf="isFinance">
           <span class="nav-link" [routerLink]="['/payment']" routerLinkActive="active">
             💳 Payment
           </span>
         </li>
-
+        <li class="nav-item" *ngIf="isFinance">
+          <span class="nav-link" [routerLink]="['/my-claims']" routerLinkActive="active">
+            📋 My Claims
+          </span>
+        </li>
         <li class="nav-item" *ngIf="isFinance">
           <span class="nav-link" [routerLink]="['/reports']" routerLinkActive="active">
+            📊 Reports
+          </span>
+        </li>
+
+        <!-- Head Only -->
+        <li class="nav-item" *ngIf="isHead">
+          <span class="nav-link" [routerLink]="['/head-approval']" routerLinkActive="active">
+            ✅ Approvals
+          </span>
+        </li>
+        <li class="nav-item" *ngIf="isHead">
+          <span class="nav-link" [routerLink]="['/head-payment']" routerLinkActive="active">
+            💳 Payment
+          </span>
+        </li>
+        <li class="nav-item" *ngIf="isHead">
+          <span class="nav-link" [routerLink]="['/head-reports']" routerLinkActive="active">
             📊 Reports
           </span>
         </li>
@@ -63,62 +86,43 @@
       </ul>
 
       <ul class="navbar-nav ms-auto align-items-center">
-
         <li class="nav-item me-2">
-          <span class="badge bg-warning text-dark px-3 py-2">
-            {{ userRole }}
-          </span>
+          <span class="badge bg-warning text-dark px-3 py-2">{{ userRole }}</span>
         </li>
-
         <li class="nav-item me-3">
-          <span
-            class="nav-link position-relative"
-            style="cursor:pointer"
-            (click)="toggleNotifications()"
-          >
+          <span class="nav-link position-relative" style="cursor:pointer"
+            (click)="toggleNotifications()">
             🔔
-            <span
-              *ngIf="unreadCount > 0"
-              class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-            >
+            <span *ngIf="unreadCount > 0"
+              class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
               {{ unreadCount }}
             </span>
           </span>
-          <div
-            class="dropdown-menu dropdown-menu-end notification-dropdown p-2"
-            [class.show]="showNotifications"
-          >
+          <div class="dropdown-menu dropdown-menu-end notification-dropdown p-2"
+            [class.show]="showNotifications">
             <h6 class="dropdown-header">Notifications</h6>
             <div *ngIf="notifications.length === 0" class="text-muted small px-3">
               No notifications
             </div>
-            <div
-              *ngFor="let n of notifications"
+            <div *ngFor="let n of notifications"
               class="dropdown-item notification-item"
-              [class.unread]="!n.isRead"
-            >
+              [class.unread]="!n.isRead">
               <small>{{ n.message }}</small><br/>
               <small class="text-muted">{{ n.createdAt | date: 'short' }}</small>
             </div>
           </div>
         </li>
-
         <li class="nav-item me-3">
           <span class="nav-link text-white">👤 {{ userEmail }}</span>
         </li>
-
         <li class="nav-item me-2">
           <span class="nav-link" [routerLink]="['/profile']" routerLinkActive="active">
             ⚙️ Profile
           </span>
         </li>
-
         <li class="nav-item">
-          <button class="btn btn-outline-light btn-sm" (click)="onLogout()">
-            Logout
-          </button>
+          <button class="btn btn-outline-light btn-sm" (click)="onLogout()">Logout</button>
         </li>
-
       </ul>
     </div>
   </div>
