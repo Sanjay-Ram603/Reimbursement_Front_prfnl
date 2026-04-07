@@ -11,6 +11,16 @@
   <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
   <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
 
+  <!-- Role Based Limit Info -->
+  <div class="alert alert-info border-0 shadow-sm mb-4 d-flex align-items-center gap-3">
+    <div class="fs-3">ℹ️</div>
+    <div>
+      <p class="fw-bold mb-0">Your Monthly Claim Limits</p>
+      <p class="mb-0 small" *ngIf="isManager">Manager: Unlimited bills per month | ₹20,000 total monthly limit</p>
+      <p class="mb-0 small" *ngIf="isFinance">Finance: Maximum 5 bills per month | ₹10,000 total monthly limit</p>
+    </div>
+  </div>
+
   <div class="card border-0 shadow-sm">
     <div class="card-body p-4">
       <form (ngSubmit)="onSubmit()">

@@ -13,81 +13,148 @@
     <p class="mt-2 text-muted">Loading...</p>
   </div>
 
-  <div *ngIf="!isLoading && requests.length === 0" class="text-center py-5">
-    <div class="fs-1 mb-3">✅</div>
-    <h5 class="text-muted">No pending payments</h5>
-    <p class="text-muted">All approved claims have been paid!</p>
-  </div>
+  <div *ngIf="!isLoading">
 
-  <div *ngIf="!isLoading && requests.length > 0" class="row g-4">
-    <div class="col-lg-7">
-      <div class="card border-0 shadow-sm">
-        <div class="card-header bg-white py-3">
-          <h6 class="fw-bold mb-0">Approved Claims Pending Payment</h6>
+    <!-- ✅ REGULAR CLAIMS -->
+    <h5 class="fw-semibold mb-3">📋 Regular Claims</h5>
+
+    <div *ngIf="requests.length === 0" class="alert alert-light border mb-4">
+      No regular claims pending payment.
+    </div>
+
+    <div *ngIf="requests.length > 0" class="row g-4 mb-5">
+      <div class="col-lg-7">
+        <div class="card border-0 shadow-sm">
+          <div class="card-header bg-white py-3">
+            <h6 class="fw-bold mb-0">Approved Claims Pending Payment</h6>
+          </div>
+          <div class="card-body p-0">
+            <div class="table-responsive">
+              <table class="table table-hover mb-0">
+                <thead class="table-light">
+                  <tr>
+                    <th class="px-4 py-3">#</th>
+                    <th class="px-4 py-3">Claimant</th>
+                    <th class="px-4 py-3">Description</th>
+                    <th class="px-4 py-3">Amount</th>
+                    <th class="px-4 py-3">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let req of requests; let i = index"
+                    [class.table-active]="selectedRequestId === req.reimbursementRequestId">
+                    <td class="px-4 py-3">{{ i + 1 }}</td>
+                    <td class="px-4 py-3">
+                      <p class="fw-semibold mb-0">{{ req.employeeName }}</p>
+                      <small class="text-muted">{{ req.employeeRole }}</small>
+                    </td>
+                    <td class="px-4 py-3">{{ req.description }}</td>
+                    <td class="px-4 py-3">₹ {{ req.amount | number:'1.2-2' }}</td>
+                    <td class="px-4 py-3">
+                      <button class="btn btn-sm btn-primary" (click)="selectRequest(req)">💳 Pay</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
-        <div class="card-body p-0">
-          <div class="table-responsive">
-            <table class="table table-hover mb-0">
-              <thead class="table-light">
-                <tr>
-                  <th class="px-4 py-3">#</th>
-                  <th class="px-4 py-3">Claimant</th>
-                  <th class="px-4 py-3">Description</th>
-                  <th class="px-4 py-3">Amount</th>
-                  <th class="px-4 py-3">Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let req of requests; let i = index"
-                  [class.table-active]="selectedRequestId === req.reimbursementRequestId">
-                  <td class="px-4 py-3">{{ i + 1 }}</td>
-                  <td class="px-4 py-3">
-                    <p class="fw-semibold mb-0">{{ req.employeeName }}</p>
-                    <small class="text-muted">{{ req.employeeRole }}</small>
-                  </td>
-                  <td class="px-4 py-3">{{ req.description }}</td>
-                  <td class="px-4 py-3">₹ {{ req.amount | number:'1.2-2' }}</td>
-                  <td class="px-4 py-3">
-                    <button class="btn btn-sm btn-primary" (click)="selectRequest(req)">
-                      💳 Pay
-                    </button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+      </div>
+
+      <div class="col-lg-5" *ngIf="selectedRequestId">
+        <div class="card border-0 shadow-sm">
+          <div class="card-header bg-white py-3">
+            <h6 class="fw-bold mb-0">💳 Process Payment</h6>
+          </div>
+          <div class="card-body p-4">
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Amount (₹)</label>
+              <input type="number" class="form-control" [(ngModel)]="selectedPayment.amount" readonly />
+            </div>
+            <div class="mb-4">
+              <label class="form-label fw-semibold">Payment Method</label>
+              <select class="form-select" [(ngModel)]="selectedPayment.paymentMethod">
+                <option [value]="PaymentMethod.BankTransfer">🏦 Bank Transfer</option>
+                <option [value]="PaymentMethod.UPI">📱 UPI</option>
+                <option [value]="PaymentMethod.Cash">💵 Cash</option>
+              </select>
+            </div>
+            <div class="d-flex gap-2">
+              <button class="btn btn-success px-4" (click)="processPayment()" [disabled]="isLoading">✅ Confirm Payment</button>
+              <button class="btn btn-outline-secondary" (click)="cancelSelection()">Cancel</button>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="col-lg-5" *ngIf="selectedRequestId">
-      <div class="card border-0 shadow-sm">
-        <div class="card-header bg-white py-3">
-          <h6 class="fw-bold mb-0">💳 Process Payment</h6>
+    <!-- ✅ ADVANCE APPROVAL PAYMENTS -->
+    <h5 class="fw-semibold mb-3">💰 Advance Approval Payments</h5>
+
+    <div *ngIf="advanceRequests.length === 0" class="alert alert-light border mb-4">
+      No advance approval payments pending.
+    </div>
+
+    <div *ngIf="advanceRequests.length > 0" class="row g-4">
+      <div class="col-lg-7">
+        <div class="card border-0 shadow-sm">
+          <div class="card-header bg-white py-3">
+            <h6 class="fw-bold mb-0">Approved Advance Requests Pending Payment</h6>
+          </div>
+          <div class="card-body p-0">
+            <div class="table-responsive">
+              <table class="table table-hover mb-0">
+                <thead class="table-light">
+                  <tr>
+                    <th class="px-4 py-3">#</th>
+                    <th class="px-4 py-3">Manager</th>
+                    <th class="px-4 py-3">Purpose</th>
+                    <th class="px-4 py-3">Amount</th>
+                    <th class="px-4 py-3">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let adv of advanceRequests; let i = index"
+                    [class.table-active]="selectedAdvanceId === adv.advanceApprovalId">
+                    <td class="px-4 py-3">{{ i + 1 }}</td>
+                    <td class="px-4 py-3">
+                      <p class="fw-semibold mb-0">{{ adv.requestedByName }}</p>
+                      <small class="badge bg-secondary">{{ adv.requestedByRole }}</small>
+                    </td>
+                    <td class="px-4 py-3">
+                      <p class="fw-semibold mb-0">{{ adv.purpose }}</p>
+                      <small class="text-muted">{{ adv.description }}</small>
+                    </td>
+                    <td class="px-4 py-3 fw-semibold text-success">₹ {{ adv.requestedAmount | number:'1.2-2' }}</td>
+                    <td class="px-4 py-3">
+                      <button class="btn btn-sm btn-primary" (click)="selectAdvance(adv)">💳 Pay</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
-        <div class="card-body p-4">
-          <div class="mb-3">
-            <label class="form-label fw-semibold">Amount (₹)</label>
-            <input type="number" class="form-control"
-              [(ngModel)]="selectedPayment.amount" name="amount" readonly />
+      </div>
+
+      <div class="col-lg-5" *ngIf="selectedAdvanceId">
+        <div class="card border-0 shadow-sm">
+          <div class="card-header bg-white py-3">
+            <h6 class="fw-bold mb-0">💰 Process Advance Payment</h6>
           </div>
-          <div class="mb-4">
-            <label class="form-label fw-semibold">Payment Method</label>
-            <select class="form-select" [(ngModel)]="selectedPayment.paymentMethod" name="paymentMethod">
-              <option [value]="PaymentMethod.BankTransfer">🏦 Bank Transfer</option>
-              <option [value]="PaymentMethod.UPI">📱 UPI</option>
-              <option [value]="PaymentMethod.Cash">💵 Cash</option>
-            </select>
-          </div>
-          <div class="d-flex gap-2">
-            <button class="btn btn-success px-4" (click)="processPayment()" [disabled]="isLoading">
-              ✅ Confirm Payment
-            </button>
-            <button class="btn btn-outline-secondary" (click)="cancelSelection()">Cancel</button>
+          <div class="card-body p-4">
+            <div class="alert alert-info mb-3" *ngIf="getSelectedAdvance() as adv">
+              <p class="mb-1 fw-semibold">{{ adv.purpose }}</p>
+              <p class="mb-0">Amount: ₹ {{ adv.requestedAmount | number:'1.2-2' }}</p>
+            </div>
+            <div class="d-flex gap-2">
+              <button class="btn btn-success px-4" (click)="processAdvancePayment()" [disabled]="isLoading">✅ Confirm Payment</button>
+              <button class="btn btn-outline-secondary" (click)="cancelSelection()">Cancel</button>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
 
+  </div>
 </div>

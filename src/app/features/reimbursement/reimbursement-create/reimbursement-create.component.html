@@ -15,6 +15,15 @@
   <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
   <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
 
+  <!-- Employee Limit Info -->
+  <div class="alert alert-info border-0 shadow-sm mb-4 d-flex align-items-center gap-3">
+    <div class="fs-3">ℹ️</div>
+    <div>
+      <p class="fw-bold mb-0">Your Monthly Claim Limits</p>
+      <p class="mb-0 small">Employee: Maximum 2 bills per month | ₹5,000 total monthly limit</p>
+    </div>
+  </div>
+
   <!-- Form Card -->
   <div class="card border-0 shadow-sm">
     <div class="card-body p-4">

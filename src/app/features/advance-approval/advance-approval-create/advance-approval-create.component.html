@@ -1,0 +1,47 @@
+<div class="container py-4 px-4">
+  <div class="d-flex align-items-center mb-4 gap-3">
+    <button class="btn btn-outline-secondary btn-sm" [routerLink]="['/advance-approval']">← Back</button>
+    <div>
+      <h3 class="fw-bold mb-1">💰 Request Advance Approval</h3>
+      <p class="text-muted mb-0">Request advance amount for team expenses (Monthly limit: ₹20,000)</p>
+    </div>
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+  <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+
+  <div class="card border-0 shadow-sm">
+    <div class="card-body p-4">
+      <form (ngSubmit)="onSubmit()">
+
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Purpose <span class="text-danger">*</span></label>
+          <input type="text" class="form-control" placeholder="e.g. Team lunch for 10 members"
+            [(ngModel)]="purpose" name="purpose" required />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Requested Amount (₹) <span class="text-danger">*</span></label>
+          <input type="number" class="form-control" placeholder="Enter amount (max ₹20,000)"
+            [(ngModel)]="requestedAmount" name="requestedAmount" min="1" max="20000" required />
+          <small class="text-muted">Monthly limit: ₹20,000</small>
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label fw-semibold">Description</label>
+          <textarea class="form-control" placeholder="Describe the purpose in detail..."
+            [(ngModel)]="description" name="description" rows="3"></textarea>
+        </div>
+
+        <div class="d-flex gap-2">
+          <button type="submit" class="btn btn-primary px-4" [disabled]="isLoading">
+            <span *ngIf="isLoading">Submitting...</span>
+            <span *ngIf="!isLoading">🚀 Submit Request</span>
+          </button>
+          <button type="button" class="btn btn-outline-secondary px-4" [routerLink]="['/advance-approval']">Cancel</button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>

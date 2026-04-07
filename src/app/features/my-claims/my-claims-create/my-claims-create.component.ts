@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { ReimbursementService } from '../../../core/services/reimbursement.service';
 import { ExpenseCategory } from '../../../core/models/reimbursement.model';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-my-claims-create',
@@ -23,13 +24,18 @@ export class MyClaimsCreateComponent implements OnInit {
   isLoading: boolean = false;
   errorMessage: string = '';
   successMessage: string = '';
+  isManager: boolean = false;
+  isFinance: boolean = false;
 
   constructor(
     private reimbursementService: ReimbursementService,
+    private authService: AuthService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
+    this.isManager = this.authService.isAdmin();
+    this.isFinance = this.authService.isFinance();
     this.reimbursementService.getExpenseCategories().subscribe({
       next: (data) => { this.categories = data; },
       error: (err) => { this.errorMessage = err.message; }

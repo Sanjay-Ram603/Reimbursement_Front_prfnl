@@ -1,0 +1,4 @@
+.card { border-radius: 12px; }
+.table th { font-weight: 600; font-size: 0.875rem; text-transform: uppercase; color: #6c757d; }
+.table td { vertical-align: middle; }
+.badge { border-radius: 6px; font-size: 0.8rem; }

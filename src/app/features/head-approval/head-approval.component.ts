@@ -108,15 +108,20 @@ export class HeadApprovalComponent implements OnInit {
   getStatusLabel(status: ReimbursementStatus): string {
     const labels: Record<number, string> = {
       1: 'Draft', 2: 'Submitted', 3: 'Manager Approved',
-      4: 'Finance Approved', 5: 'Rejected', 6: 'Paid'
+      4: 'Finance Approved', 5: 'Rejected', 6: 'Paid', 7: 'Head Approved'
     };
     return labels[status] || 'Unknown';
   }
 
   getStatusClass(status: ReimbursementStatus): string {
     const classes: Record<number, string> = {
-      1: 'bg-secondary', 2: 'bg-warning text-dark', 3: 'bg-info text-dark',
-      4: 'bg-primary', 5: 'bg-danger', 6: 'bg-success'
+      1: 'bg-secondary',
+      2: 'bg-warning text-dark',
+      3: 'bg-info text-dark',
+      4: 'bg-primary',
+      5: 'bg-danger',
+      6: 'bg-success',
+      7: 'status-head-approved'
     };
     return classes[status] || 'bg-secondary';
   }

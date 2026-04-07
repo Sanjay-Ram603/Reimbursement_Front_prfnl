@@ -118,6 +118,33 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/unauthorized/unauthorized.component').then(m => m.UnauthorizedComponent)
   },
+  // Manager advance approval
+  {
+    path: 'advance-approval',
+    canActivate: [authGuard, roleGuard(['Manager'])],
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import('./features/advance-approval/advance-approval-list/advance-approval-list.component').then(
+            m => m.AdvanceApprovalListComponent)
+      },
+      {
+        path: 'create',
+        loadComponent: () =>
+          import('./features/advance-approval/advance-approval-create/advance-approval-create.component').then(
+            m => m.AdvanceApprovalCreateComponent)
+      }
+    ]
+  },
+  // Head reviews advance approvals
+  {
+    path: 'head-advance-approval',
+    canActivate: [authGuard, roleGuard(['Head'])],
+    loadComponent: () =>
+      import('./features/head-advance-approval/head-advance-approval.component').then(
+        m => m.HeadAdvanceApprovalComponent)
+  },
   { path: '**', redirectTo: 'login' }
 ];
 
