@@ -1,9 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
-import { RegisterRequest } from '../../../core/models/user.model';
+import { RegisterRequest, Role } from '../../../core/models/user.model';
 
 @Component({
   selector: 'app-register',
@@ -12,7 +12,7 @@ import { RegisterRequest } from '../../../core/models/user.model';
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
 })
-export class RegisterComponent {
+export class RegisterComponent implements OnInit {
 
   registerData: RegisterRequest = {
     firstName: '',
@@ -22,12 +22,7 @@ export class RegisterComponent {
     roleId: ''
   };
 
-  roles = [
-    { id: 'B9AD34D1-65C4-47BE-9295-C752ABA187EB', name: 'Manager' },
-    { id: 'A61036DA-ED2D-4F28-8F1D-FDB73738BAFB', name: 'Employee' },
-    { id: 'B57A53CB-8B0C-431C-A321-41ABC9007692', name: 'Finance' },
-    { id: '7691B9B5-9A31-414B-B920-676618C1216C', name: 'Head' }
-  ];
+  roles: Role[] = [];
 
   errorMessage: string = '';
   successMessage: string = '';
@@ -46,6 +41,13 @@ export class RegisterComponent {
     private authService: AuthService,
     private router: Router
   ) {}
+
+  ngOnInit(): void {
+    this.authService.getRoles().subscribe({
+      next: (data) => { this.roles = data; },
+      error: () => { this.errorMessage = 'Failed to load roles. Please refresh.'; }
+    });
+  }
 
   // ✅ Validate First Name
   validateFirstName(): void {

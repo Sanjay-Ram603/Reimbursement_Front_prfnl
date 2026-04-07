@@ -6,7 +6,8 @@ export enum ReimbursementStatus {
   ManagerApproved = 3,
   FinanceApproved = 4,
   Rejected = 5,
-  Paid = 6
+  Paid = 6,
+  HeadApproved = 7
 }
 
 export interface ExpenseCategory {
@@ -49,4 +50,29 @@ export interface ReimbursementAttachment {
 export interface UpdateReimbursementRequest {
   amount?: number;
   description?: string;
+}
+
+export interface AdvanceApprovalRequest {
+  purpose: string;
+  requestedAmount: number;
+  description?: string;
+}
+
+export interface AdvanceApprovalResponse {
+  advanceApprovalId: string;
+  purpose: string;
+  requestedAmount: number;
+  description?: string;
+  status: string;
+  createdAt: string;
+  requestedByName: string;
+  requestedByRole: string;
+  headComments?: string;
+  approvedAt?: string;
+  isPaid: boolean;
+}
+
+export interface ProcessAdvanceApproval {
+  status: string;
+  comments?: string;
 }

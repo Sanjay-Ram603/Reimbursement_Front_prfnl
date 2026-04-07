@@ -151,8 +151,8 @@
           (change)="validateRole()"
         >
           <option value="">Select your role</option>
-          <option *ngFor="let role of roles" [value]="role.id">
-            {{ role.name }}
+          <option *ngFor="let role of roles" [value]="role.roleId">
+            {{ role.roleName }}
           </option>
         </select>
         <div class="invalid-feedback" *ngIf="errors.roleId">

@@ -6,7 +6,8 @@ import {
   LoginRequest,
   RegisterRequest,
   AuthResponse,
-  RegisterResponse
+  RegisterResponse,
+  Role
 } from '../models/user.model';
 
 @Injectable({
@@ -23,6 +24,10 @@ export class AuthService {
 
   register(request: RegisterRequest): Observable<RegisterResponse> {
     return this.http.post<RegisterResponse>(`${this.apiUrl}/register`, request);
+  }
+
+  getRoles(): Observable<Role[]> {
+    return this.http.get<Role[]>(`${environment.apiUrl}/Role`);
   }
 
   saveToken(token: string, userId: string, email: string): void {
