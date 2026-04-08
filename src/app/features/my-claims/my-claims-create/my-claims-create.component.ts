@@ -27,6 +27,9 @@ export class MyClaimsCreateComponent implements OnInit {
   isManager: boolean = false;
   isFinance: boolean = false;
 
+  // ✅ Max date = today (no future dates)
+  todayDate: string = new Date().toISOString().split('T')[0];
+
   constructor(
     private reimbursementService: ReimbursementService,
     private authService: AuthService,
@@ -71,6 +74,11 @@ export class MyClaimsCreateComponent implements OnInit {
     if (!this.amount || this.amount <= 0) { this.errorMessage = 'Please enter a valid amount!'; return; }
     if (!this.description) { this.errorMessage = 'Please enter a description!'; return; }
     if (!this.expenseDate) { this.errorMessage = 'Please select an expense date!'; return; }
+    // ✅ Validate no future date
+    const selected = new Date(this.expenseDate);
+    const today = new Date();
+    today.setHours(23, 59, 59, 999);
+    if (selected > today) { this.errorMessage = 'Expense date cannot be a future date!'; return; }
     if (!this.selectedFile) { this.errorMessage = 'Please attach a receipt!'; return; }
 
     this.errorMessage = '';

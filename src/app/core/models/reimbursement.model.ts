@@ -56,6 +56,7 @@ export interface AdvanceApprovalRequest {
   purpose: string;
   requestedAmount: number;
   description?: string;
+  expectedDate?: Date;
 }
 
 export interface AdvanceApprovalResponse {

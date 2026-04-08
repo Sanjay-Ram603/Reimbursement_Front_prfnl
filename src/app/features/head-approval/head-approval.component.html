@@ -83,11 +83,11 @@
               <td class="px-4 py-3">
                 <div class="d-flex flex-column gap-2">
                   <div class="d-flex gap-2 flex-wrap">
-                    <button class="btn btn-sm btn-outline-primary"
-                      (click)="downloadAttachment(req.reimbursementRequestId)"
-                      *ngIf="req.attachmentPath">
-                      📎 Attachment
-                    </button>
+                    <app-attachment-preview
+                      *ngIf="req.attachmentPath"
+                      [requestId]="req.reimbursementRequestId"
+                      [attachmentPath]="req.attachmentPath || ''"
+                    ></app-attachment-preview>
                     <button class="btn btn-sm btn-success"
                       (click)="processApproval(req.reimbursementRequestId, ReimbursementStatus.HeadApproved)">
                       ✅ Approve

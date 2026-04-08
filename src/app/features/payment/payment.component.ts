@@ -43,7 +43,8 @@ export class PaymentComponent implements OnInit {
   this.reimbursementService.getAllRequests().subscribe({
     next: (data) => {
       this.requests = data.filter(
-        r => r.status === ReimbursementStatus.FinanceApproved
+        r => r.status === ReimbursementStatus.FinanceApproved ||
+             r.status === ReimbursementStatus.HeadApproved
       );
       this.isLoading = false;
     },

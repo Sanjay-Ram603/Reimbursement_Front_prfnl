@@ -1,0 +1,63 @@
+<!-- Preview Button -->
+<div class="d-inline-flex gap-2">
+  <button
+    class="btn btn-sm btn-outline-primary"
+    (click)="openPreview()"
+    *ngIf="attachmentPath"
+  >
+    👁️ View
+  </button>
+</div>
+
+<!-- Preview Modal Overlay -->
+<div class="preview-overlay" *ngIf="isOpen" (click)="closePreview()">
+  <div class="preview-modal" (click)="$event.stopPropagation()">
+
+    <!-- Header -->
+    <div class="preview-header">
+      <h6 class="fw-bold mb-0">📎 Attachment Preview</h6>
+      <div class="d-flex gap-2">
+        <button class="btn btn-sm btn-outline-light" (click)="downloadAttachment()">
+          ⬇️ Download
+        </button>
+        <button class="btn btn-sm btn-light" (click)="closePreview()">
+          ✕ Close
+        </button>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="preview-content">
+
+      <!-- Loading -->
+      <div *ngIf="isLoading" class="text-center py-5">
+        <div class="spinner-border text-primary" role="status"></div>
+        <p class="mt-2 text-muted">Loading attachment...</p>
+      </div>
+
+      <!-- Error -->
+      <div *ngIf="errorMessage && !isLoading" class="text-center py-5">
+        <div class="fs-1 mb-3">❌</div>
+        <p class="text-muted">{{ errorMessage }}</p>
+      </div>
+
+      <!-- Image Preview -->
+      <img
+        *ngIf="!isLoading && !errorMessage && !isPdf && previewUrl"
+        [src]="previewUrl"
+        class="preview-image"
+        alt="Attachment"
+      />
+
+      <!-- PDF Preview -->
+      <iframe
+        *ngIf="!isLoading && !errorMessage && isPdf && previewUrl"
+        [src]="previewUrl"
+        class="preview-pdf"
+        title="PDF Preview"
+      ></iframe>
+
+    </div>
+
+  </div>
+</div>

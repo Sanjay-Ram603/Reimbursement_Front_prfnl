@@ -22,3 +22,8 @@
 .btn {
   border-radius: 6px;
 }
+
+.bg-purple {
+  background-color: #6f42c1 !important;
+  color: white;
+}

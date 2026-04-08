@@ -6,7 +6,7 @@
       Reviewing <strong>Submitted</strong> requests — Approve or Reject
     </p>
     <p class="text-muted mb-0" *ngIf="isFinance">
-      Reviewing <strong>Manager Approved</strong> requests — Final Approval or Reject
+      Reviewing <strong>Manager Approved</strong> and <strong>Head Approved</strong> requests — Final Approval or Reject
     </p>
   </div>
 
@@ -105,14 +105,12 @@
       <div class="d-flex flex-column gap-2">
         <div class="d-flex gap-2 flex-wrap">
 
-          <!-- Download Attachment -->
-          <button
-            class="btn btn-sm btn-outline-primary"
-            (click)="downloadAttachment(req.reimbursementRequestId)"
+          <!-- Attachment Preview -->
+          <app-attachment-preview
             *ngIf="req.attachmentPath"
-          >
-            📎 Attachment
-          </button>
+            [requestId]="req.reimbursementRequestId"
+            [attachmentPath]="req.attachmentPath || ''"
+          ></app-attachment-preview>
 
           <!-- Admin Approve -->
           <button

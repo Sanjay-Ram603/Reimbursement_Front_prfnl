@@ -5,11 +5,12 @@ import { ApprovalService } from '../../core/services/approval.service';
 import { ReimbursementService } from '../../core/services/reimbursement.service';
 import { ApprovalActionRequest } from '../../core/models/approval.model';
 import { ReimbursementRequestResponse, ReimbursementStatus } from '../../core/models/reimbursement.model';
+import { AttachmentPreviewComponent } from '../../shared/attachment-preview/attachment-preview.component';
 
 @Component({
   selector: 'app-head-approval',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, AttachmentPreviewComponent],
   templateUrl: './head-approval.component.html',
   styleUrl: './head-approval.component.css'
 })
@@ -78,7 +79,9 @@ export class HeadApprovalComponent implements OnInit {
     };
     this.approvalService.processApproval(request).subscribe({
       next: () => {
-        this.successMessage = 'Action processed successfully!';
+        this.successMessage = status === ReimbursementStatus.HeadApproved
+          ? 'Approved! Finance team will process the payment.'
+          : 'Request Rejected!';
         this.comments = '';
         this.selectedRequestId = '';
         this.loadRequests();

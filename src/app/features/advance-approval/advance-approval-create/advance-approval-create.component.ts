@@ -15,6 +15,7 @@ export class AdvanceApprovalCreateComponent {
   purpose = '';
   requestedAmount = 0;
   description = '';
+  expectedDate = '';
   isLoading = false;
   errorMessage = '';
   successMessage = '';
@@ -27,6 +28,7 @@ export class AdvanceApprovalCreateComponent {
   onSubmit(): void {
     if (!this.purpose) { this.errorMessage = 'Purpose is required!'; return; }
     if (!this.requestedAmount || this.requestedAmount <= 0) { this.errorMessage = 'Please enter a valid amount!'; return; }
+    if (!this.expectedDate) { this.errorMessage = 'Please select an expected date!'; return; }
     if (this.requestedAmount > 20000) { this.errorMessage = 'Amount cannot exceed monthly limit of ₹20,000!'; return; }
 
     this.errorMessage = '';
@@ -35,7 +37,8 @@ export class AdvanceApprovalCreateComponent {
     this.advanceService.createAdvanceApproval({
       purpose: this.purpose,
       requestedAmount: this.requestedAmount,
-      description: this.description
+      description: this.description,
+      expectedDate: new Date(this.expectedDate)
     }).subscribe({
       next: () => {
         this.successMessage = 'Advance approval request submitted successfully!';

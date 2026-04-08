@@ -5,11 +5,12 @@ import { ReimbursementService } from '../../../core/services/reimbursement.servi
 import { ApprovalService } from '../../../core/services/approval.service';
 import { ApprovalHistoryResponse } from '../../../core/models/approval.model';
 import { ReimbursementRequestResponse, ReimbursementStatus } from '../../../core/models/reimbursement.model';
+import { AttachmentPreviewComponent } from '../../../shared/attachment-preview/attachment-preview.component';
 
 @Component({
   selector: 'app-my-claims-list',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, AttachmentPreviewComponent],
   templateUrl: './my-claims-list.component.html',
   styleUrl: './my-claims-list.component.css'
 })

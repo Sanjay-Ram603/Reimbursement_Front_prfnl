@@ -30,6 +30,9 @@ export class ReimbursementCreateComponent implements OnInit {
   agreedToTerms: boolean = false;
   showTerms: boolean = false;
 
+  // ✅ Max date = today (no future dates)
+  todayDate: string = new Date().toISOString().split('T')[0];
+
   constructor(
     private reimbursementService: ReimbursementService,
     private router: Router
@@ -114,6 +117,14 @@ export class ReimbursementCreateComponent implements OnInit {
     }
     if (!this.expenseDate) {
       this.errorMessage = 'Please select an expense date!';
+      return;
+    }
+    // ✅ Validate no future date
+    const selected = new Date(this.expenseDate);
+    const today = new Date();
+    today.setHours(23, 59, 59, 999);
+    if (selected > today) {
+      this.errorMessage = 'Expense date cannot be a future date!';
       return;
     }
     if (!this.selectedFile) {

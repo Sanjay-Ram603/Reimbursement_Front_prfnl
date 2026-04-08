@@ -6,11 +6,12 @@ import { ReimbursementService } from '../../core/services/reimbursement.service'
 import { AuthService } from '../../core/services/auth.service';
 import { ApprovalActionRequest, ApprovalHistoryResponse } from '../../core/models/approval.model';
 import { ReimbursementRequestResponse, ReimbursementStatus } from '../../core/models/reimbursement.model';
+import { AttachmentPreviewComponent } from '../../shared/attachment-preview/attachment-preview.component';
 
 @Component({
   selector: 'app-approval',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, AttachmentPreviewComponent],
   templateUrl: './approval.component.html',
   styleUrl: './approval.component.css'
 })
@@ -56,7 +57,8 @@ export class ApprovalComponent implements OnInit {
           );
         } else if (this.isFinance) {
           this.allRequests = data.filter(
-            r => r.status === ReimbursementStatus.ManagerApproved
+            r => r.status === ReimbursementStatus.ManagerApproved ||
+                 r.status === ReimbursementStatus.HeadApproved
           );
         }
         this.applyFilters();
@@ -147,7 +149,7 @@ export class ApprovalComponent implements OnInit {
   getStatusLabel(status: ReimbursementStatus): string {
     const labels: Record<number, string> = {
       1: 'Draft', 2: 'Submitted', 3: 'Manager Approved',
-      4: 'Finance Approved', 5: 'Rejected', 6: 'Paid'
+      4: 'Finance Approved', 5: 'Rejected', 6: 'Paid', 7: 'Head Approved'
     };
     return labels[status] || 'Unknown';
   }
@@ -155,7 +157,7 @@ export class ApprovalComponent implements OnInit {
   getStatusClass(status: ReimbursementStatus): string {
     const classes: Record<number, string> = {
       1: 'bg-secondary', 2: 'bg-warning text-dark', 3: 'bg-info text-dark',
-      4: 'bg-primary', 5: 'bg-danger', 6: 'bg-success'
+      4: 'bg-primary', 5: 'bg-danger', 6: 'bg-success', 7: 'bg-purple'
     };
     return classes[status] || 'bg-secondary';
   }

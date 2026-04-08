@@ -56,14 +56,12 @@
                 <td class="px-4 py-3">
                   <div class="d-flex gap-2 flex-wrap">
 
-                    <!-- Download -->
-                    <button
-                      class="btn btn-sm btn-outline-primary"
-                      (click)="downloadAttachment(claim.reimbursementRequestId)"
+                    <!-- Attachment Preview -->
+                    <app-attachment-preview
                       *ngIf="claim.attachmentPath"
-                    >
-                      📎 Download
-                    </button>
+                      [requestId]="claim.reimbursementRequestId"
+                      [attachmentPath]="claim.attachmentPath || ''"
+                    ></app-attachment-preview>
 
                     <!-- ✅ View Comments - only after approval action -->
                     <button

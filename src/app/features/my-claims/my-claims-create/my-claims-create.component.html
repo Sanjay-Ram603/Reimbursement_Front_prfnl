@@ -49,7 +49,8 @@
 
         <div class="mb-3">
           <label class="form-label fw-semibold">Expense Date <span class="text-danger">*</span></label>
-          <input type="date" class="form-control" [(ngModel)]="expenseDate" name="expenseDate" required />
+          <input type="date" class="form-control" [(ngModel)]="expenseDate" name="expenseDate" [max]="todayDate" required />
+          <small class="text-muted">Cannot select future dates</small>
         </div>
 
         <div class="mb-4">

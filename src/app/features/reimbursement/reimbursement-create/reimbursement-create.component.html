@@ -88,8 +88,10 @@
             class="form-control"
             [(ngModel)]="expenseDate"
             name="expenseDate"
+            [max]="todayDate"
             required
           />
+          <small class="text-muted">Cannot select future dates</small>
         </div>
 
         <!-- File Attachment -->
